@@ -7,6 +7,9 @@ from model import train_model, predict_cibil
 st.title("CIBIL Score Prediction")
 st.write("Enter the following values to predict your CIBIL score:")
 
+# Load model and SHAP explainer once using Streamlit caching
+model, explainer = train_model()
+
 # Input form
 ph = st.slider("Payment History (0–100)%", 0, 100, 50)
 cu = st.slider("Credit Utilization (0.0–1.0)", 0.0, 1.0, 0.5)
@@ -17,7 +20,6 @@ dr = st.slider("Debt-to-Income Ratio (0.0–1.0)", 0.0, 1.0, 0.3)
 
 # Predict button
 if st.button("Predict"):
-    model, explainer = train_model()
     score, shap_values, suggestions = predict_cibil(model, explainer, [ph, cu, ca, na, hi, dr])
 
     st.write(f"📈 **Predicted CIBIL Score**: {round(score)}")
